@@ -1,15 +1,11 @@
 import { Module } from '@nestjs/common';
-import { IBooksReviewsRepository } from '../common/interfaces';
-import { BookMemoryRepository } from '../common/test/helpers';
+import { BooksReviewsRepository } from 'src/infrastructure/books-reviews-repository.module';
 import { ReviewController } from './review.controller';
 import { ReviewService } from './review.service';
 
 @Module({
-  imports: [],
+  imports: [BooksReviewsRepository],
   controllers: [ReviewController],
-  providers: [
-    ReviewService,
-    { provide: IBooksReviewsRepository, useClass: BookMemoryRepository },
-  ],
+  providers: [ReviewService],
 })
 export class ReviewModule {}
