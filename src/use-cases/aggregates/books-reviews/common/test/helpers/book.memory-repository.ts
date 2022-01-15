@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
+
 import {
   IBook,
   IBookData,
   IBooksGroupedByGenre,
   IBooksGroupedByGenreAndYear,
-} from 'src/books/interfaces';
-import { IBookRepository } from 'src/books/interfaces/book-repository.interface';
+  IBooksReviewsRepository,
+} from '../../interfaces';
 
 @Injectable()
-export class BookMemoryRepository implements IBookRepository {
+export class BookMemoryRepository implements IBooksReviewsRepository {
   private books: IBook[];
 
   constructor() {

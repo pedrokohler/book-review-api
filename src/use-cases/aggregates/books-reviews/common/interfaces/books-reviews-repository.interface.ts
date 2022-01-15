@@ -5,7 +5,7 @@ import {
   IBooksGroupedByGenreAndYear,
 } from '.';
 
-export abstract class IBookRepository {
+export abstract class IBooksReviewsRepository {
   public abstract create(data: IBookData): Promise<IBook>;
 
   public abstract find(id: string): Promise<IBook>;

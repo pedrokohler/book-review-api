@@ -4,14 +4,15 @@ import { DateTime } from 'luxon';
 import {
   IBookData,
   IBook,
-  IBookDto,
   IBooksGroupedByGenre,
   IBooksGroupedByGenreAndYear,
-} from './interfaces';
-import { IBookRepository } from './interfaces/book-repository.interface';
+  IBooksReviewsRepository,
+} from '../common/interfaces';
+import { IBookDto } from './interfaces';
+
 @Injectable()
 export class BookService {
-  constructor(private readonly bookRepository: IBookRepository) {}
+  constructor(private readonly bookRepository: IBooksReviewsRepository) {}
 
   async createBook(data: IBookDto): Promise<IBook> {
     const book = this.convertBookDtoToBookParam(data);

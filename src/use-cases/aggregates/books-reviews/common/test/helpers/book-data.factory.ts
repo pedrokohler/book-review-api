@@ -1,4 +1,4 @@
-import { IBookDto } from 'src/books/interfaces';
+import { IBookDto } from '../../../books/interfaces';
 
 export function createBookDto(data?: Partial<IBookDto>): IBookDto {
   return {
