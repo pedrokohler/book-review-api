@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { DateTime } from 'luxon';
 
-import { IBookData, IBook, IBookDTO, IBooksGroupedByGenre } from './interfaces';
+import {
+  IBookData,
+  IBook,
+  IBookDTO,
+  IBooksGroupedByGenre,
+  IBooksGroupedByGenreAndYear,
+} from './interfaces';
 import { IBookRepository } from './interfaces/book-repository.interface';
 @Injectable()
 export class BookService {
@@ -18,6 +24,10 @@ export class BookService {
 
   async getAllBooksGroupedByGenre(): Promise<IBooksGroupedByGenre> {
     return await this.bookRepository.getAllGroupedByGenre();
+  }
+
+  async getAllBooksGroupedByGenreAndYear(): Promise<IBooksGroupedByGenreAndYear> {
+    return await this.bookRepository.getAllGroupedByGenreAndReleaseData();
   }
 
   private convertBookDtoToBookParam(data: IBookDTO): IBookData {

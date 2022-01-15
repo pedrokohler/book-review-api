@@ -52,7 +52,7 @@ describe('BookService', () => {
     expect(book).toHaveProperty('genre', bookDTO.genre);
   });
 
-  it('should find all books grouped by genre', async () => {
+  it('should get all books grouped by genre', async () => {
     const bookDTO = createBookDTO();
 
     await service.createBook({ ...bookDTO, genre: 'Comedy' });
@@ -66,5 +66,67 @@ describe('BookService', () => {
     expect(booksGroupeByGenre).toHaveProperty('Thriller');
     expect(booksGroupeByGenre['Comedy']).toHaveLength(3);
     expect(booksGroupeByGenre['Thriller']).toHaveLength(1);
+  });
+
+  it('should get all books grouped by genre and year', async () => {
+    const bookDTO = createBookDTO();
+
+    await service.createBook({
+      ...bookDTO,
+      genre: 'Comedy',
+      releaseDate: '2016-05-25T09:08:34.123',
+    });
+    await service.createBook({
+      ...bookDTO,
+      genre: 'Comedy',
+      releaseDate: '2016-05-25T09:08:34.123',
+    });
+    await service.createBook({
+      ...bookDTO,
+      genre: 'Comedy',
+      releaseDate: '2015-05-25T09:08:34.123',
+    });
+    await service.createBook({
+      ...bookDTO,
+      genre: 'Comedy',
+      releaseDate: '2015-05-25T09:08:34.123',
+    });
+    await service.createBook({
+      ...bookDTO,
+      genre: 'Thriller',
+      releaseDate: '2016-05-25T09:08:34.123',
+    });
+    await service.createBook({
+      ...bookDTO,
+      genre: 'Thriller',
+      releaseDate: '2018-05-25T09:08:34.123',
+    });
+    await service.createBook({
+      ...bookDTO,
+      genre: 'Thriller',
+      releaseDate: '2018-05-25T09:08:34.123',
+    });
+    await service.createBook({
+      ...bookDTO,
+      genre: 'Comedy',
+      releaseDate: '2019-05-25T09:08:34.123',
+    });
+
+    const booksGroupeByGenreAndYear =
+      await service.getAllBooksGroupedByGenreAndYear();
+
+    expect(booksGroupeByGenreAndYear).toHaveProperty('Comedy');
+    expect(booksGroupeByGenreAndYear).toHaveProperty('Thriller');
+    expect(booksGroupeByGenreAndYear['Comedy']).toHaveProperty('2015');
+    expect(booksGroupeByGenreAndYear['Comedy']).toHaveProperty('2016');
+    expect(booksGroupeByGenreAndYear['Comedy']).toHaveProperty('2019');
+    expect(booksGroupeByGenreAndYear['Thriller']).toHaveProperty('2016');
+    expect(booksGroupeByGenreAndYear['Thriller']).toHaveProperty('2018');
+
+    expect(booksGroupeByGenreAndYear['Comedy']['2015']).toHaveLength(2);
+    expect(booksGroupeByGenreAndYear['Comedy']['2016']).toHaveLength(2);
+    expect(booksGroupeByGenreAndYear['Comedy']['2019']).toHaveLength(1);
+    expect(booksGroupeByGenreAndYear['Thriller']['2016']).toHaveLength(1);
+    expect(booksGroupeByGenreAndYear['Thriller']['2018']).toHaveLength(2);
   });
 });

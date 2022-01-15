@@ -40,6 +40,18 @@ export class BookMemoryRepository implements IBookRepository {
   }
 
   public async getAllGroupedByGenreAndReleaseData(): Promise<IBooksGroupedByGenreAndYear> {
-    throw new Error('Method not implemented.');
+    return this.books.reduce((groupedBooks, book) => {
+      const { genre, releaseDate } = book;
+      const { year } = releaseDate;
+      const booksOfSameGenre = groupedBooks[genre] || {};
+      const booksOfSameGenreAndYear = groupedBooks[genre]?.[year] || [];
+      return {
+        ...groupedBooks,
+        [genre]: {
+          ...booksOfSameGenre,
+          [year]: [...booksOfSameGenreAndYear, book],
+        },
+      };
+    }, {});
   }
 }
