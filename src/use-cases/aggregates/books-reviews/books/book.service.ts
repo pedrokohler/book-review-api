@@ -16,19 +16,19 @@ export class BookService {
 
   async createBook(data: IBookDto): Promise<IBook> {
     const book = this.convertBookDtoToBookParam(data);
-    return await this.bookRepository.create(book);
+    return await this.bookRepository.createBook(book);
   }
 
   async findBook(id: string): Promise<IBook> {
-    return await this.bookRepository.find(id);
+    return await this.bookRepository.findBook(id);
   }
 
   async getAllBooksGroupedByGenre(): Promise<IBooksGroupedByGenre> {
-    return await this.bookRepository.getAllGroupedByGenre();
+    return await this.bookRepository.getAllBooksGroupedByGenre();
   }
 
   async getAllBooksGroupedByGenreAndYear(): Promise<IBooksGroupedByGenreAndYear> {
-    return await this.bookRepository.getAllGroupedByGenreAndReleaseData();
+    return await this.bookRepository.getAllBooksGroupedByGenreAndReleaseData();
   }
 
   private convertBookDtoToBookParam(data: IBookDto): IBookData {

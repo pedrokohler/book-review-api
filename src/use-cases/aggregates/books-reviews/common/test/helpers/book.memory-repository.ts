@@ -8,6 +8,8 @@ import {
   IBooksGroupedByGenreAndYear,
   IBooksReviewsRepository,
 } from '../../interfaces';
+import { IReviewData } from '../../interfaces/review-data.interface';
+import { IReview } from '../../interfaces/review.interface';
 
 @Injectable()
 export class BookMemoryRepository implements IBooksReviewsRepository {
@@ -17,19 +19,19 @@ export class BookMemoryRepository implements IBooksReviewsRepository {
     this.books = [];
   }
 
-  public async create(data: IBookData): Promise<IBook> {
+  public async createBook(data: IBookData): Promise<IBook> {
     const id = randomUUID();
     const book: IBook = { id, ...data };
     this.books.push(book);
     return book;
   }
 
-  public async find(id: string): Promise<IBook> {
+  public async findBook(id: string): Promise<IBook> {
     const book = this.books.find((book) => book.id === id);
     return book;
   }
 
-  public async getAllGroupedByGenre(): Promise<IBooksGroupedByGenre> {
+  public async getAllBooksGroupedByGenre(): Promise<IBooksGroupedByGenre> {
     return this.books.reduce<IBooksGroupedByGenre>((groupedBooks, book) => {
       const { genre } = book;
       const booksOfSameGenre = groupedBooks[genre] || [];
@@ -40,7 +42,7 @@ export class BookMemoryRepository implements IBooksReviewsRepository {
     }, {});
   }
 
-  public async getAllGroupedByGenreAndReleaseData(): Promise<IBooksGroupedByGenreAndYear> {
+  public async getAllBooksGroupedByGenreAndReleaseData(): Promise<IBooksGroupedByGenreAndYear> {
     return this.books.reduce<IBooksGroupedByGenreAndYear>(
       (groupedBooks, book) => {
         const { genre, releaseDate } = book;
@@ -57,5 +59,24 @@ export class BookMemoryRepository implements IBooksReviewsRepository {
       },
       {},
     );
+  }
+
+  public createReview({
+    bookId,
+    data,
+  }: {
+    bookId: string;
+    data: IReviewData;
+  }): Promise<IReview> {
+    throw new Error('Method not implemented.');
+  }
+  public deleteReview({
+    bookId,
+    reviewId,
+  }: {
+    bookId: string;
+    reviewId: string;
+  }): Promise<boolean> {
+    throw new Error('Method not implemented.');
   }
 }
