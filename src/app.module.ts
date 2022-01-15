@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { BookModule } from './use-cases/aggregates/books-reviews/books';
+import { BookModule, ReviewModule } from './use-cases/aggregates/books-reviews';
 
 @Module({
-  imports: [BookModule],
+  imports: [BookModule, ReviewModule],
   controllers: [],
   providers: [],
 })
