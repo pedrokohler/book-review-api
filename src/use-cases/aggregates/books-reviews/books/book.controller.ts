@@ -30,7 +30,7 @@ export class BookController {
         return await this.bookService.getAllBooksGroupedByGenreAndYear();
       default:
         throw new HttpException(
-          'Invalid groupBy value',
+          'Invalid group-by value',
           HttpStatus.BAD_REQUEST,
         );
     }
