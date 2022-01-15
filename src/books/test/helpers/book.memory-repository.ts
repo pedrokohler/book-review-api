@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { IBook, IBookParam } from 'src/books/interfaces';
-import { IRepository } from 'src/interfaces/repository.interface';
+import { IRepository } from 'src/interfaces';
 
 @Injectable()
 export class BookMemoryRepository implements IRepository<IBook> {
