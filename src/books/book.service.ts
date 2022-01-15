@@ -12,6 +12,10 @@ export class BookService {
     return await this.bookRepository.create(book);
   }
 
+  async findBook(id: string): Promise<IBook> {
+    return await this.bookRepository.find(id);
+  }
+
   private convertBookDtoToBookParam(data: IBookDTO): IBookData {
     return {
       ...data,
