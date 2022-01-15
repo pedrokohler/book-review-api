@@ -13,7 +13,7 @@ import { IReview } from '../../interfaces/review.interface';
 
 @Injectable()
 export class BookMemoryRepository implements IBooksReviewsRepository {
-  private books: IBook[];
+  public books: IBook[];
 
   constructor() {
     this.books = [];
@@ -21,7 +21,7 @@ export class BookMemoryRepository implements IBooksReviewsRepository {
 
   public async createBook(data: IBookData): Promise<IBook> {
     const id = randomUUID();
-    const book: IBook = { id, ...data };
+    const book: IBook = { ...data, id, reviews: [] };
     this.books.push(book);
     return book;
   }
@@ -61,15 +61,23 @@ export class BookMemoryRepository implements IBooksReviewsRepository {
     );
   }
 
-  public createReview({
+  public async createReview({
     bookId,
     data,
   }: {
     bookId: string;
     data: IReviewData;
   }): Promise<IReview> {
-    throw new Error('Method not implemented.');
+    const book = await this.findBook(bookId);
+    if (!book) {
+      return null;
+    }
+    const id = randomUUID();
+    const review = { id, ...data };
+    book.reviews.push(review);
+    return review;
   }
+
   public deleteReview({
     bookId,
     reviewId,
