@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { IBook } from 'src/books/book.interface';
+import { IBook, IBookParam } from 'src/books/interfaces';
 import { IRepository } from 'src/interfaces/repository.interface';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class BookMemoryRepository implements IRepository<IBook> {
     this.books = [];
   }
 
-  public async create(data: Omit<IBook, 'id'>): Promise<IBook> {
+  public async create(data: IBookParam): Promise<IBook> {
     const id = randomUUID();
     const book: IBook = { id, ...data };
     this.books.push(book);
@@ -28,7 +28,7 @@ export class BookMemoryRepository implements IRepository<IBook> {
     data,
   }: {
     id: string;
-    data: Omit<Partial<IBook>, 'id'>;
+    data: Partial<IBookParam>;
   }): Promise<IBook> {
     const bookIndex = this.books.findIndex((book) => book.id === id);
     const currentBook = this.books[bookIndex];

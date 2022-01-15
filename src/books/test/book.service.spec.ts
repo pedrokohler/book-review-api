@@ -26,7 +26,7 @@ describe('BookService', () => {
   it('should create a book', async () => {
     const bookName = 'test title';
     const author = 'test author';
-    const releaseDate = DateTime.fromISO('2016-05-25T09:08:34.123');
+    const releaseDate = '2016-05-25T09:08:34.123';
     const genre = 'test genre';
 
     const book = await service.createBook({
@@ -39,7 +39,10 @@ describe('BookService', () => {
     expect(book).toHaveProperty('id');
     expect(book).toHaveProperty('bookName', bookName);
     expect(book).toHaveProperty('author', author);
-    expect(book).toHaveProperty('releaseDate', releaseDate);
+    expect(book).toHaveProperty('releaseDate');
+    expect(book.releaseDate.day).toBe(25);
+    expect(book.releaseDate.month).toBe(5);
+    expect(book.releaseDate.year).toBe(2016);
     expect(book).toHaveProperty('genre', genre);
   });
 });
