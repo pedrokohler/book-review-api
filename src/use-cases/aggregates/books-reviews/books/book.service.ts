@@ -30,7 +30,7 @@ export class BookService {
   }
 
   async getAllBooksGroupedByGenreAndYear(): Promise<IBooksGroupedByGenreAndYear> {
-    return await this.booksReviewsRepository.getAllBooksGroupedByGenreAndReleaseData();
+    return await this.booksReviewsRepository.getAllBooksGroupedByGenreAndReleaseDate();
   }
 
   private convertBookDtoToBookParam(data: CreateBookDto): IBookData {

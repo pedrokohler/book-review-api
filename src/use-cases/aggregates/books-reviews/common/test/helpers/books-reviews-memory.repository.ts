@@ -52,7 +52,7 @@ export class BooksReviewsMemoryRepository implements IBooksReviewsRepository {
     }, {});
   }
 
-  public async getAllBooksGroupedByGenreAndReleaseData(): Promise<IBooksGroupedByGenreAndYear> {
+  public async getAllBooksGroupedByGenreAndReleaseDate(): Promise<IBooksGroupedByGenreAndYear> {
     return this.books.reduce<IBooksGroupedByGenreAndYear>(
       (groupedBooks, book) => {
         const { genre, releaseDate } = book;

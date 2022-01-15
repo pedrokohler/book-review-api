@@ -14,7 +14,7 @@ export abstract class IBooksReviewsRepository {
 
   public abstract getAllBooksGroupedByGenre(): Promise<IBooksGroupedByField>;
 
-  public abstract getAllBooksGroupedByGenreAndReleaseData(): Promise<IBooksGroupedByGenreAndYear>;
+  public abstract getAllBooksGroupedByGenreAndReleaseDate(): Promise<IBooksGroupedByGenreAndYear>;
 
   public abstract createReview({
     bookId,
