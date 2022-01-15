@@ -12,23 +12,25 @@ import { IBookDto } from './interfaces';
 
 @Injectable()
 export class BookService {
-  constructor(private readonly bookRepository: IBooksReviewsRepository) {}
+  constructor(
+    private readonly booksReviewsRepository: IBooksReviewsRepository,
+  ) {}
 
   async createBook(data: IBookDto): Promise<IBook> {
     const book = this.convertBookDtoToBookParam(data);
-    return await this.bookRepository.createBook(book);
+    return await this.booksReviewsRepository.createBook(book);
   }
 
   async findBook(id: string): Promise<IBook> {
-    return await this.bookRepository.findBook(id);
+    return await this.booksReviewsRepository.findBook(id);
   }
 
   async getAllBooksGroupedByGenre(): Promise<IBooksGroupedByField> {
-    return await this.bookRepository.getAllBooksGroupedByGenre();
+    return await this.booksReviewsRepository.getAllBooksGroupedByGenre();
   }
 
   async getAllBooksGroupedByGenreAndYear(): Promise<IBooksGroupedByGenreAndYear> {
-    return await this.bookRepository.getAllBooksGroupedByGenreAndReleaseData();
+    return await this.booksReviewsRepository.getAllBooksGroupedByGenreAndReleaseData();
   }
 
   private convertBookDtoToBookParam(data: IBookDto): IBookData {
