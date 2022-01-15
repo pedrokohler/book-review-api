@@ -3,9 +3,11 @@ import { randomUUID } from 'crypto';
 
 import { ReviewService } from '../../reviews/review.service';
 import { IBooksReviewsRepository } from '../interfaces';
-import { createBookDto } from './helpers';
-import { BookMemoryRepository } from './helpers/book.memory-repository';
-import { createReviewData } from './helpers/review-data.factory';
+import {
+  createBookDto,
+  BooksReviewsMemoryRepository,
+  createReviewData,
+} from './helpers';
 
 describe('ReviewService', () => {
   let service: ReviewService;
@@ -15,7 +17,10 @@ describe('ReviewService', () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
         ReviewService,
-        { provide: IBooksReviewsRepository, useClass: BookMemoryRepository },
+        {
+          provide: IBooksReviewsRepository,
+          useClass: BooksReviewsMemoryRepository,
+        },
       ],
     }).compile();
 

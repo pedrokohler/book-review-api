@@ -12,7 +12,7 @@ import { IReviewData } from '../../interfaces/review-data.interface';
 import { IReview } from '../../interfaces/review.interface';
 
 @Injectable()
-export class BookMemoryRepository implements IBooksReviewsRepository {
+export class BooksReviewsMemoryRepository implements IBooksReviewsRepository {
   public books: IBook[];
 
   constructor() {

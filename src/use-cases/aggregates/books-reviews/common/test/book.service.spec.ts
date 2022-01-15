@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BookService } from '../../books/book.service';
 import { IBooksReviewsRepository } from '../interfaces';
 import { createBookDto } from './helpers';
-import { BookMemoryRepository } from './helpers/book.memory-repository';
+import { BooksReviewsMemoryRepository } from './helpers';
 
 describe('BookService', () => {
   let service: BookService;
@@ -12,7 +12,10 @@ describe('BookService', () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
         BookService,
-        { provide: IBooksReviewsRepository, useClass: BookMemoryRepository },
+        {
+          provide: IBooksReviewsRepository,
+          useClass: BooksReviewsMemoryRepository,
+        },
       ],
     }).compile();
 
