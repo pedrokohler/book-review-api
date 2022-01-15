@@ -1,4 +1,3 @@
-export interface IReviewData {
-  review: string;
-  rating: number;
-}
+import { CreateReviewDto } from '../../reviews/dtos';
+
+export type IReviewData = CreateReviewDto;

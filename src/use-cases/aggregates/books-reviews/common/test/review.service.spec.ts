@@ -86,38 +86,47 @@ describe('ReviewService', () => {
       expect(repository['books'][1]['reviews']).toHaveLength(1);
     });
 
-    it('should return true if review is deleted', async () => {
+    it('should return {success: true} if review is deleted', async () => {
       const reviewData = createReviewData();
 
       const review = await service.createReview({
         bookId: '1',
         data: reviewData,
       });
-      const wasDeleted = await service.deleteReview({
+      const response = await service.deleteReview({
         reviewId: review.id,
         bookId: '1',
       });
-      expect(wasDeleted).toBe(true);
+      expect(response).toEqual({ success: true });
     });
 
-    it('should return false if review is not deleted', async () => {
+    it('should return throw error if review is not deleted', async () => {
       const reviewData = createReviewData();
 
       const review = await service.createReview({
         bookId: '1',
         data: reviewData,
       });
-      const wasDeletedWithWrongReviewId = await service.deleteReview({
-        reviewId: randomUUID(),
-        bookId: '1',
-      });
-      expect(wasDeletedWithWrongReviewId).toBe(false);
 
-      const wasDeleteWithWrongBookId = await service.deleteReview({
-        reviewId: review.id,
-        bookId: '2',
-      });
-      expect(wasDeleteWithWrongBookId).toBe(false);
+      try {
+        await service.deleteReview({
+          reviewId: randomUUID(),
+          bookId: '1',
+        });
+      } catch (e) {
+        expect(e).toBeDefined();
+      }
+
+      try {
+        await service.deleteReview({
+          reviewId: review.id,
+          bookId: '2',
+        });
+      } catch (e) {
+        expect(e).toBeDefined();
+      }
+
+      expect.assertions(2);
     });
   });
 

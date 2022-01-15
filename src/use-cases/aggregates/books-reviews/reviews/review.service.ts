@@ -1,11 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   IBook,
   IBookRatingsByAuthor,
   IBooksReviewsRepository,
 } from '../common/interfaces';
-import { IReviewData } from '../common/interfaces/review-data.interface';
 import { IReview } from '../common/interfaces/review.interface';
+import { CreateReviewDto, DeletedReviewResponseDto } from './dtos';
 
 @Injectable()
 export class ReviewService {
@@ -18,12 +18,16 @@ export class ReviewService {
     data,
   }: {
     bookId: string;
-    data: IReviewData;
+    data: CreateReviewDto;
   }): Promise<IReview> {
-    return await this.booksReviewsRepository.createReview({
+    const review = await this.booksReviewsRepository.createReview({
       bookId,
       data,
     });
+    if (!review) {
+      throw new NotFoundException(`Book with id ${bookId} not found.`);
+    }
+    return review;
   }
 
   public async deleteReview({
@@ -32,11 +36,19 @@ export class ReviewService {
   }: {
     bookId: string;
     reviewId: string;
-  }): Promise<boolean> {
-    return await this.booksReviewsRepository.deleteReview({
+  }): Promise<DeletedReviewResponseDto> {
+    const success = await this.booksReviewsRepository.deleteReview({
       bookId,
       reviewId,
     });
+
+    if (!success) {
+      throw new NotFoundException(
+        "Book or review with given ids weren't found",
+      );
+    }
+
+    return { success };
   }
 
   public async getSumOfRatingsGroupedByAuthor(): Promise<IBookRatingsByAuthor> {

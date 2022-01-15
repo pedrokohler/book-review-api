@@ -10,14 +10,14 @@ import {
 import { IBook } from '../common/interfaces';
 import { BookService } from './book.service';
 import { GroupByOption } from './enums/group-by-option.enum';
-import { IBookDto } from './interfaces';
+import { CreateBookDto } from './dtos';
 
 @Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
 
   @Post()
-  async createBook(@Body() data: IBookDto): Promise<IBook> {
+  async createBook(@Body() data: CreateBookDto): Promise<IBook> {
     return await this.bookService.createBook(data);
   }
 

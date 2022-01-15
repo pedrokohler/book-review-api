@@ -8,7 +8,7 @@ import {
   IBooksGroupedByGenreAndYear,
   IBooksReviewsRepository,
 } from '../common/interfaces';
-import { IBookDto } from './interfaces';
+import { CreateBookDto } from './dtos';
 
 @Injectable()
 export class BookService {
@@ -16,7 +16,7 @@ export class BookService {
     private readonly booksReviewsRepository: IBooksReviewsRepository,
   ) {}
 
-  async createBook(data: IBookDto): Promise<IBook> {
+  async createBook(data: CreateBookDto): Promise<IBook> {
     const book = this.convertBookDtoToBookParam(data);
     return await this.booksReviewsRepository.createBook(book);
   }
@@ -33,7 +33,7 @@ export class BookService {
     return await this.booksReviewsRepository.getAllBooksGroupedByGenreAndReleaseData();
   }
 
-  private convertBookDtoToBookParam(data: IBookDto): IBookData {
+  private convertBookDtoToBookParam(data: CreateBookDto): IBookData {
     return {
       ...data,
       releaseDate: DateTime.fromISO(data.releaseDate).toUTC(),
