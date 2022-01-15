@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { IRepository } from 'src/interfaces/repository.interface';
 import { BookService } from '../book.service';
+import { IBookRepository } from '../interfaces/book-repository.interface';
 import { createBookDTO } from './helpers';
 import { BookMemoryRepository } from './helpers/book.memory-repository';
 
@@ -12,7 +12,7 @@ describe('BookService', () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
         BookService,
-        { provide: IRepository, useClass: BookMemoryRepository },
+        { provide: IBookRepository, useClass: BookMemoryRepository },
       ],
     }).compile();
 
@@ -25,7 +25,6 @@ describe('BookService', () => {
 
   it('should create a book', async () => {
     const bookDTO = createBookDTO();
-
     const book = await service.createBook(bookDTO);
 
     expect(book).toHaveProperty('id');
@@ -40,9 +39,7 @@ describe('BookService', () => {
 
   it('should find a previously created book', async () => {
     const bookDTO = createBookDTO();
-
     const { id } = await service.createBook(bookDTO);
-
     const book = await service.findBook(id);
 
     expect(book).toHaveProperty('id');
@@ -53,5 +50,21 @@ describe('BookService', () => {
     expect(book.releaseDate.month).toBe(5);
     expect(book.releaseDate.year).toBe(2016);
     expect(book).toHaveProperty('genre', bookDTO.genre);
+  });
+
+  it('should find all books grouped by genre', async () => {
+    const bookDTO = createBookDTO();
+
+    await service.createBook({ ...bookDTO, genre: 'Comedy' });
+    await service.createBook({ ...bookDTO, genre: 'Comedy' });
+    await service.createBook({ ...bookDTO, genre: 'Thriller' });
+    await service.createBook({ ...bookDTO, genre: 'Comedy' });
+
+    const booksGroupeByGenre = await service.getAllBooksGroupedByGenre();
+
+    expect(booksGroupeByGenre).toHaveProperty('Comedy');
+    expect(booksGroupeByGenre).toHaveProperty('Thriller');
+    expect(booksGroupeByGenre['Comedy']).toHaveLength(3);
+    expect(booksGroupeByGenre['Thriller']).toHaveLength(1);
   });
 });

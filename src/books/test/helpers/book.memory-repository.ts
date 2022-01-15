@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { IBook, IBookData } from 'src/books/interfaces';
-import { IRepository } from 'src/interfaces';
+import {
+  IBook,
+  IBookData,
+  IBooksGroupedByGenre,
+  IBooksGroupedByGenreAndYear,
+} from 'src/books/interfaces';
+import { IBookRepository } from 'src/books/interfaces/book-repository.interface';
 
 @Injectable()
-export class BookMemoryRepository implements IRepository<IBookData, IBook> {
+export class BookMemoryRepository implements IBookRepository {
   private books: IBook[];
 
   constructor() {
@@ -23,26 +28,18 @@ export class BookMemoryRepository implements IRepository<IBookData, IBook> {
     return book;
   }
 
-  public async update({
-    id,
-    data,
-  }: {
-    id: string;
-    data: Partial<IBookData>;
-  }): Promise<IBook> {
-    const bookIndex = this.books.findIndex((book) => book.id === id);
-    const currentBook = this.books[bookIndex];
-    const updatedBook = {
-      ...currentBook,
-      ...data,
-    };
-    this.books[bookIndex] = updatedBook;
-    return updatedBook;
+  public async getAllGroupedByGenre(): Promise<IBooksGroupedByGenre> {
+    return this.books.reduce((groupedBooks, book) => {
+      const { genre } = book;
+      const booksOfSameGenre = groupedBooks[genre] || [];
+      return {
+        ...groupedBooks,
+        [genre]: [...booksOfSameGenre, book],
+      };
+    }, {});
   }
 
-  public async delete(id: string): Promise<boolean> {
-    const initialLength = this.books.length;
-    this.books = this.books.filter((book) => book.id !== id);
-    return initialLength !== this.books.length;
+  public async getAllGroupedByGenreAndReleaseData(): Promise<IBooksGroupedByGenreAndYear> {
+    throw new Error('Method not implemented.');
   }
 }
