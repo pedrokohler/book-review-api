@@ -21,4 +21,17 @@ export class ReviewService {
       data,
     });
   }
+
+  async deleteReview({
+    bookId,
+    reviewId,
+  }: {
+    bookId: string;
+    reviewId: string;
+  }): Promise<boolean> {
+    return await this.booksReviewsRepository.deleteReview({
+      bookId,
+      reviewId,
+    });
+  }
 }

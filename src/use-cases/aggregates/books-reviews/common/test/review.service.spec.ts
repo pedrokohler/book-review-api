@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { randomUUID } from 'crypto';
 
 import { ReviewService } from '../../reviews/review.service';
 import { IBooksReviewsRepository } from '../interfaces';
@@ -57,5 +58,62 @@ describe('ReviewService', () => {
       data: reviewData,
     });
     expect(repository['books'][1]['reviews']).toHaveLength(1);
+  });
+
+  it('should delete the correct', async () => {
+    const reviewData = createReviewData();
+
+    const review = await service.createReview({
+      bookId: '1',
+      data: reviewData,
+    });
+
+    await service.createReview({
+      bookId: '1',
+      data: reviewData,
+    });
+
+    await service.createReview({
+      bookId: '2',
+      data: reviewData,
+    });
+
+    await service.deleteReview({ reviewId: review.id, bookId: '1' });
+    expect(repository['books'][0]['reviews']).toHaveLength(1);
+    expect(repository['books'][1]['reviews']).toHaveLength(1);
+  });
+
+  it('should return true if review is deleted', async () => {
+    const reviewData = createReviewData();
+
+    const review = await service.createReview({
+      bookId: '1',
+      data: reviewData,
+    });
+    const wasDeleted = await service.deleteReview({
+      reviewId: review.id,
+      bookId: '1',
+    });
+    expect(wasDeleted).toBe(true);
+  });
+
+  it('should return false if review is not deleted', async () => {
+    const reviewData = createReviewData();
+
+    const review = await service.createReview({
+      bookId: '1',
+      data: reviewData,
+    });
+    const wasDeletedWithWrongReviewId = await service.deleteReview({
+      reviewId: randomUUID(),
+      bookId: '1',
+    });
+    expect(wasDeletedWithWrongReviewId).toBe(false);
+
+    const wasDeleteWithWrongBookId = await service.deleteReview({
+      reviewId: review.id,
+      bookId: '2',
+    });
+    expect(wasDeleteWithWrongBookId).toBe(false);
   });
 });

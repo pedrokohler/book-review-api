@@ -78,13 +78,20 @@ export class BookMemoryRepository implements IBooksReviewsRepository {
     return review;
   }
 
-  public deleteReview({
+  public async deleteReview({
     bookId,
     reviewId,
   }: {
     bookId: string;
     reviewId: string;
   }): Promise<boolean> {
-    throw new Error('Method not implemented.');
+    const book = await this.findBook(bookId);
+    if (!book) {
+      return false;
+    }
+
+    const previousReviewsLength = book.reviews.length;
+    book.reviews = book.reviews.filter((review) => review.id !== reviewId);
+    return book.reviews.length !== previousReviewsLength;
   }
 }
