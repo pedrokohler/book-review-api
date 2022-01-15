@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import {
   IBook,
   IBookData,
-  IBooksGroupedByGenre,
+  IBooksGroupedByField,
   IBooksGroupedByGenreAndYear,
   IBooksReviewsRepository,
 } from '../../interfaces';
@@ -31,13 +31,23 @@ export class BookMemoryRepository implements IBooksReviewsRepository {
     return book;
   }
 
-  public async getAllBooksGroupedByGenre(): Promise<IBooksGroupedByGenre> {
-    return this.books.reduce<IBooksGroupedByGenre>((groupedBooks, book) => {
-      const { genre } = book;
-      const booksOfSameGenre = groupedBooks[genre] || [];
+  public getAllBooksGroupedByAuthor(): Promise<IBooksGroupedByField> {
+    return this.getAllBooksGroupedByField('author');
+  }
+
+  public async getAllBooksGroupedByGenre(): Promise<IBooksGroupedByField> {
+    return this.getAllBooksGroupedByField('genre');
+  }
+
+  private async getAllBooksGroupedByField(
+    fieldName: string,
+  ): Promise<IBooksGroupedByField> {
+    return this.books.reduce<IBooksGroupedByField>((groupedBooks, book) => {
+      const fieldValue = book[fieldName];
+      const booksOfSameGenre = groupedBooks[fieldValue] || [];
       return {
         ...groupedBooks,
-        [genre]: [...booksOfSameGenre, book],
+        [fieldValue]: [...booksOfSameGenre, book],
       };
     }, {});
   }

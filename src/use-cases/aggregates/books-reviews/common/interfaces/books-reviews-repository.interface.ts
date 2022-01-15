@@ -1,7 +1,7 @@
 import {
   IBook,
   IBookData,
-  IBooksGroupedByGenre,
+  IBooksGroupedByField,
   IBooksGroupedByGenreAndYear,
 } from '.';
 import { IReviewData } from './review-data.interface';
@@ -12,7 +12,7 @@ export abstract class IBooksReviewsRepository {
 
   public abstract findBook(id: string): Promise<IBook>;
 
-  public abstract getAllBooksGroupedByGenre(): Promise<IBooksGroupedByGenre>;
+  public abstract getAllBooksGroupedByGenre(): Promise<IBooksGroupedByField>;
 
   public abstract getAllBooksGroupedByGenreAndReleaseData(): Promise<IBooksGroupedByGenreAndYear>;
 
@@ -31,4 +31,6 @@ export abstract class IBooksReviewsRepository {
     bookId: string;
     reviewId: string;
   }): Promise<boolean>;
+
+  public abstract getAllBooksGroupedByAuthor(): Promise<IBooksGroupedByField>;
 }

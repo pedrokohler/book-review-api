@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import {
   IBookData,
   IBook,
-  IBooksGroupedByGenre,
+  IBooksGroupedByField,
   IBooksGroupedByGenreAndYear,
   IBooksReviewsRepository,
 } from '../common/interfaces';
@@ -23,7 +23,7 @@ export class BookService {
     return await this.bookRepository.findBook(id);
   }
 
-  async getAllBooksGroupedByGenre(): Promise<IBooksGroupedByGenre> {
+  async getAllBooksGroupedByGenre(): Promise<IBooksGroupedByField> {
     return await this.bookRepository.getAllBooksGroupedByGenre();
   }
 

@@ -23,9 +23,11 @@ describe('ReviewService', () => {
     service = app.get<ReviewService>(ReviewService);
 
     repository['books'] = [
-      { id: '1', ...createBookDto(), reviews: [] },
-      { id: '2', ...createBookDto(), reviews: [] },
-      { id: '3', ...createBookDto(), reviews: [] },
+      { id: '1', ...createBookDto({ author: 'Stephen King' }), reviews: [] },
+      { id: '2', ...createBookDto({ author: 'Stephen King' }), reviews: [] },
+      { id: '3', ...createBookDto({ author: 'George Orwell' }), reviews: [] },
+      { id: '4', ...createBookDto({ author: 'George Orwell' }), reviews: [] },
+      { id: '5', ...createBookDto({ author: 'Stephen King' }), reviews: [] },
     ];
   });
 
@@ -60,60 +62,86 @@ describe('ReviewService', () => {
     expect(repository['books'][1]['reviews']).toHaveLength(1);
   });
 
-  it('should delete the correct', async () => {
-    const reviewData = createReviewData();
+  describe('delete reviews', () => {
+    it('should delete the correct review', async () => {
+      const reviewData = createReviewData();
 
-    const review = await service.createReview({
-      bookId: '1',
-      data: reviewData,
+      const review = await service.createReview({
+        bookId: '1',
+        data: reviewData,
+      });
+
+      await service.createReview({
+        bookId: '1',
+        data: reviewData,
+      });
+
+      await service.createReview({
+        bookId: '2',
+        data: reviewData,
+      });
+
+      await service.deleteReview({ reviewId: review.id, bookId: '1' });
+      expect(repository['books'][0]['reviews']).toHaveLength(1);
+      expect(repository['books'][1]['reviews']).toHaveLength(1);
     });
 
-    await service.createReview({
-      bookId: '1',
-      data: reviewData,
+    it('should return true if review is deleted', async () => {
+      const reviewData = createReviewData();
+
+      const review = await service.createReview({
+        bookId: '1',
+        data: reviewData,
+      });
+      const wasDeleted = await service.deleteReview({
+        reviewId: review.id,
+        bookId: '1',
+      });
+      expect(wasDeleted).toBe(true);
     });
 
-    await service.createReview({
-      bookId: '2',
-      data: reviewData,
-    });
+    it('should return false if review is not deleted', async () => {
+      const reviewData = createReviewData();
 
-    await service.deleteReview({ reviewId: review.id, bookId: '1' });
-    expect(repository['books'][0]['reviews']).toHaveLength(1);
-    expect(repository['books'][1]['reviews']).toHaveLength(1);
+      const review = await service.createReview({
+        bookId: '1',
+        data: reviewData,
+      });
+      const wasDeletedWithWrongReviewId = await service.deleteReview({
+        reviewId: randomUUID(),
+        bookId: '1',
+      });
+      expect(wasDeletedWithWrongReviewId).toBe(false);
+
+      const wasDeleteWithWrongBookId = await service.deleteReview({
+        reviewId: review.id,
+        bookId: '2',
+      });
+      expect(wasDeleteWithWrongBookId).toBe(false);
+    });
   });
 
-  it('should return true if review is deleted', async () => {
+  it('should get sum of ratings grouped by author', async () => {
     const reviewData = createReviewData();
 
-    const review = await service.createReview({
-      bookId: '1',
-      data: reviewData,
-    });
-    const wasDeleted = await service.deleteReview({
-      reviewId: review.id,
-      bookId: '1',
-    });
-    expect(wasDeleted).toBe(true);
-  });
+    await service.createReview({ bookId: '1', data: reviewData });
+    await service.createReview({ bookId: '1', data: reviewData });
+    await service.createReview({ bookId: '2', data: reviewData });
+    await service.createReview({ bookId: '2', data: reviewData });
+    await service.createReview({ bookId: '2', data: reviewData });
+    await service.createReview({ bookId: '3', data: reviewData });
+    await service.createReview({ bookId: '4', data: reviewData });
+    await service.createReview({ bookId: '4', data: reviewData });
+    await service.createReview({ bookId: '4', data: reviewData });
+    await service.createReview({ bookId: '4', data: reviewData });
+    await service.createReview({ bookId: '4', data: reviewData });
 
-  it('should return false if review is not deleted', async () => {
-    const reviewData = createReviewData();
+    const sumOfRatingsGroupedByAuthor =
+      await service.getSumOfRatingsGroupedByAuthor();
 
-    const review = await service.createReview({
-      bookId: '1',
-      data: reviewData,
-    });
-    const wasDeletedWithWrongReviewId = await service.deleteReview({
-      reviewId: randomUUID(),
-      bookId: '1',
-    });
-    expect(wasDeletedWithWrongReviewId).toBe(false);
-
-    const wasDeleteWithWrongBookId = await service.deleteReview({
-      reviewId: review.id,
-      bookId: '2',
-    });
-    expect(wasDeleteWithWrongBookId).toBe(false);
+    expect(sumOfRatingsGroupedByAuthor).toHaveProperty('Stephen King');
+    expect(sumOfRatingsGroupedByAuthor).toHaveProperty('George Orwell');
+    expect(sumOfRatingsGroupedByAuthor['Stephen King']).toBe(50);
+    expect(sumOfRatingsGroupedByAuthor['George Orwell']).toBe(60);
   });
 });
