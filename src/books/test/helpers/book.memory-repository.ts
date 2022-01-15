@@ -29,7 +29,7 @@ export class BookMemoryRepository implements IBookRepository {
   }
 
   public async getAllGroupedByGenre(): Promise<IBooksGroupedByGenre> {
-    return this.books.reduce((groupedBooks, book) => {
+    return this.books.reduce<IBooksGroupedByGenre>((groupedBooks, book) => {
       const { genre } = book;
       const booksOfSameGenre = groupedBooks[genre] || [];
       return {
@@ -40,18 +40,21 @@ export class BookMemoryRepository implements IBookRepository {
   }
 
   public async getAllGroupedByGenreAndReleaseData(): Promise<IBooksGroupedByGenreAndYear> {
-    return this.books.reduce((groupedBooks, book) => {
-      const { genre, releaseDate } = book;
-      const { year } = releaseDate;
-      const booksOfSameGenre = groupedBooks[genre] || {};
-      const booksOfSameGenreAndYear = groupedBooks[genre]?.[year] || [];
-      return {
-        ...groupedBooks,
-        [genre]: {
-          ...booksOfSameGenre,
-          [year]: [...booksOfSameGenreAndYear, book],
-        },
-      };
-    }, {});
+    return this.books.reduce<IBooksGroupedByGenreAndYear>(
+      (groupedBooks, book) => {
+        const { genre, releaseDate } = book;
+        const { year } = releaseDate;
+        const booksOfSameGenre = groupedBooks[genre] || {};
+        const booksOfSameGenreAndYear = groupedBooks[genre]?.[year] || [];
+        return {
+          ...groupedBooks,
+          [genre]: {
+            ...booksOfSameGenre,
+            [year]: [...booksOfSameGenreAndYear, book],
+          },
+        };
+      },
+      {},
+    );
   }
 }

@@ -1,6 +1,6 @@
-import { IBookDTO } from 'src/books/interfaces';
+import { IBookDto } from 'src/books/interfaces';
 
-export function createBookDTO(data?: Partial<IBookDTO>): IBookDTO {
+export function createBookDto(data?: Partial<IBookDto>): IBookDto {
   return {
     bookName: 'test title',
     author: 'test author',
