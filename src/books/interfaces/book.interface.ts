@@ -1,9 +1,5 @@
-import { DateTime } from 'luxon';
+import { IBookData } from '.';
 
-export interface IBook {
+export interface IBook extends IBookData {
   id: string;
-  bookName: string;
-  author: string;
-  releaseDate: DateTime;
-  genre: string;
 }

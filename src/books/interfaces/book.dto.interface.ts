@@ -1,5 +1,5 @@
-import { IBookParam } from '.';
+import { IBookData } from '.';
 
-export interface IBookDTO extends Omit<IBookParam, 'releaseDate'> {
+export interface IBookDTO extends Omit<IBookData, 'releaseDate'> {
   releaseDate: string;
 }

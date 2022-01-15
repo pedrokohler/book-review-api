@@ -1,7 +1,5 @@
-import { IResourceParam } from './resource.param.interface';
-
-export abstract class IRepository<T> {
-  public abstract create(data: IResourceParam<T>): Promise<T>;
+export abstract class IRepository<TData, T> {
+  public abstract create(data: TData): Promise<T>;
 
   public abstract find(id: string): Promise<T>;
 
@@ -10,7 +8,7 @@ export abstract class IRepository<T> {
     data,
   }: {
     id: string;
-    data: Partial<IResourceParam<T>>;
+    data: Partial<TData>;
   }): Promise<T>;
 
   public abstract delete(id: string): Promise<boolean>;
