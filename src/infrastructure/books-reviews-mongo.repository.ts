@@ -41,33 +41,10 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
 
   public async getAllBooksGroupedByGenreAndReleaseDate(): Promise<IBooksGroupedByGenreAndYear> {
     const books = await this.bookModel.find().populate('reviews').exec();
-    return books.reduce<IBooksGroupedByGenreAndYear>((groupedBooks, book) => {
-      const { genre, releaseDate } = book;
-      const { year } = DateTime.fromJSDate(releaseDate as unknown as Date);
-      const booksOfSameGenre = groupedBooks[genre] || {};
-      const booksOfSameGenreAndYear = groupedBooks[genre]?.[year] || [];
-      return {
-        ...groupedBooks,
-        [genre]: {
-          ...booksOfSameGenre,
-          [year]: [...booksOfSameGenreAndYear, book as unknown as IBook],
-        },
-      };
-    }, {});
-  }
-
-  private async getAllBooksGroupedByField(
-    fieldName: string,
-  ): Promise<IBooksGroupedByField> {
-    const books = await this.bookModel.find().populate('reviews').exec();
-    return books.reduce<IBooksGroupedByField>((groupedBooks, book) => {
-      const fieldValue = book[fieldName];
-      const booksOfSameGenre = groupedBooks[fieldValue] || [];
-      return {
-        ...groupedBooks,
-        [fieldValue]: [...booksOfSameGenre, book],
-      };
-    }, {});
+    return books.reduce<IBooksGroupedByGenreAndYear>(
+      this.reduceBooksGroupedByAuthorAndReleaseDate.bind(this),
+      {},
+    );
   }
 
   public async createReview({
@@ -88,6 +65,7 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
     await doc.save();
     return review as unknown as IReview;
   }
+
   public async deleteReview({
     bookId,
     reviewId,
@@ -114,5 +92,40 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
     doc.reviews = book.reviews.filter((review) => review.id !== reviewId);
     await doc.save();
     return true;
+  }
+
+  private async getAllBooksGroupedByField(
+    fieldName: string,
+  ): Promise<IBooksGroupedByField> {
+    const books = await this.bookModel.find().populate('reviews').exec();
+    return books.reduce<IBooksGroupedByField>(
+      this.reduceBooksGroupedByField(fieldName).bind(this),
+      {},
+    );
+  }
+
+  private reduceBooksGroupedByField(fieldName: string) {
+    return (groupedBooks, book) => {
+      const fieldValue = book[fieldName];
+      const booksOfSameGenre = groupedBooks[fieldValue] || [];
+      return {
+        ...groupedBooks,
+        [fieldValue]: [...booksOfSameGenre, book],
+      };
+    };
+  }
+
+  private reduceBooksGroupedByAuthorAndReleaseDate(groupedBooks, book) {
+    const { genre, releaseDate } = book;
+    const { year } = DateTime.fromJSDate(releaseDate as unknown as Date);
+    const booksOfSameGenre = groupedBooks[genre] || {};
+    const booksOfSameGenreAndYear = groupedBooks[genre]?.[year] || [];
+    return {
+      ...groupedBooks,
+      [genre]: {
+        ...booksOfSameGenre,
+        [year]: [...booksOfSameGenreAndYear, book as unknown as IBook],
+      },
+    };
   }
 }
