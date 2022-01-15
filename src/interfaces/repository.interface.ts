@@ -1,5 +1,5 @@
 export abstract class IRepository<T> {
-  public abstract create({ id, data }: { id: string; data: T }): Promise<T>;
+  public abstract create(data: Omit<T, 'id'>): Promise<T>;
 
   public abstract find(id: string): Promise<T>;
 
@@ -8,14 +8,8 @@ export abstract class IRepository<T> {
     data,
   }: {
     id: string;
-    data: Partial<T>;
+    data: Omit<Partial<T>, 'id'>;
   }): Promise<T>;
 
-  public abstract delete({
-    id,
-    data,
-  }: {
-    id: string;
-    data: Partial<T>;
-  }): Promise<boolean>;
+  public abstract delete(id: string): Promise<boolean>;
 }
