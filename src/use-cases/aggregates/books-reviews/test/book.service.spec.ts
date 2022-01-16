@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { BookService } from '../../books/book.service';
-import { IBooksReviewsRepository } from '../interfaces';
+import { BookService } from '../books/book.service';
+import { IBooksReviewsRepository } from '../common/interfaces';
 import { createBookDto } from './helpers';
 import { BooksReviewsMemoryRepository } from './helpers';
 

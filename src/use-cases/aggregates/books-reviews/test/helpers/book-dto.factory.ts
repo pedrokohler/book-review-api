@@ -1,4 +1,4 @@
-import { CreateBookDto } from '../../../books/dtos';
+import { CreateBookDto } from '../../books/dtos';
 
 export function createBookDto(data?: Partial<CreateBookDto>): CreateBookDto {
   return {
