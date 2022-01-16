@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { DateTime } from 'luxon';
 import { Model } from 'mongoose';
 import {
   IBook,
@@ -40,7 +39,39 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   }
 
   public async getAllBooksGroupedByGenreAndReleaseDate(): Promise<IBooksGroupedByGenreAndYear> {
-    const books = await this.bookModel.find().populate('reviews').exec();
+    const books = await this.bookModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'reviews',
+            localField: 'reviews',
+            foreignField: '_id',
+            as: 'reviews',
+          },
+        },
+        {
+          $group: {
+            _id: {
+              genre: '$genre',
+              year: {
+                $year: '$releaseDate',
+              },
+            },
+            genre: {
+              $first: '$genre',
+            },
+            year: {
+              $first: {
+                $year: '$releaseDate',
+              },
+            },
+            documents: {
+              $push: '$$CURRENT',
+            },
+          },
+        },
+      ])
+      .exec();
     return books.reduce<IBooksGroupedByGenreAndYear>(
       this.reduceBooksGroupedByAuthorAndReleaseDate.bind(this),
       {},
@@ -61,8 +92,7 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
     const review = new this.reviewModel(data);
     const doc = book as unknown as BookDocument;
     doc.reviews.push(review);
-    await review.save();
-    await doc.save();
+    await Promise.all([review.save(), doc.save()]);
     return review as unknown as IReview;
   }
 
@@ -78,8 +108,10 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
       return false;
     }
 
-    const bookHasReview = book.reviews.some((review) => review.id === reviewId);
-    if (!bookHasReview) {
+    const isReviewInThisBook = book.reviews.some(
+      (review) => review.id === reviewId,
+    );
+    if (!isReviewInThisBook) {
       return false;
     }
 
@@ -97,7 +129,29 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   private async getAllBooksGroupedByField(
     fieldName: string,
   ): Promise<IBooksGroupedByField> {
-    const books = await this.bookModel.find().populate('reviews').exec();
+    const books = await this.bookModel
+      .aggregate([
+        {
+          $lookup: {
+            from: 'reviews',
+            localField: 'reviews',
+            foreignField: '_id',
+            as: 'reviews',
+          },
+        },
+        {
+          $group: {
+            _id: `$${fieldName}`,
+            [fieldName]: {
+              $first: `$${fieldName}`,
+            },
+            documents: {
+              $push: '$$CURRENT',
+            },
+          },
+        },
+      ])
+      .exec();
     return books.reduce<IBooksGroupedByField>(
       this.reduceBooksGroupedByField(fieldName).bind(this),
       {},
@@ -105,26 +159,31 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   }
 
   private reduceBooksGroupedByField(fieldName: string) {
-    return (groupedBooks, book) => {
-      const fieldValue = book[fieldName];
-      const booksOfSameGenre = groupedBooks[fieldValue] || [];
+    return (groupedBooks, aggregationResult) => {
+      const fieldValue = aggregationResult[fieldName];
+      const { documents } = aggregationResult;
+      const previousBooksOfSameField = groupedBooks[fieldValue] ?? [];
+
       return {
         ...groupedBooks,
-        [fieldValue]: [...booksOfSameGenre, book],
+        [fieldValue]: [...previousBooksOfSameField, ...documents],
       };
     };
   }
 
-  private reduceBooksGroupedByAuthorAndReleaseDate(groupedBooks, book) {
-    const { genre, releaseDate } = book;
-    const { year } = DateTime.fromJSDate(releaseDate as unknown as Date);
-    const booksOfSameGenre = groupedBooks[genre] || {};
-    const booksOfSameGenreAndYear = groupedBooks[genre]?.[year] || [];
+  private reduceBooksGroupedByAuthorAndReleaseDate(
+    groupedBooks,
+    aggregationResult,
+  ) {
+    const { genre, year, documents } = aggregationResult;
+    const previousBooksOfSameGenre = groupedBooks[genre] ?? {};
+    const previousBooksOfSameGenreAndYear = groupedBooks[genre]?.[year] ?? [];
+
     return {
       ...groupedBooks,
       [genre]: {
-        ...booksOfSameGenre,
-        [year]: [...booksOfSameGenreAndYear, book as unknown as IBook],
+        ...previousBooksOfSameGenre,
+        [year]: [...previousBooksOfSameGenreAndYear, ...documents],
       },
     };
   }
