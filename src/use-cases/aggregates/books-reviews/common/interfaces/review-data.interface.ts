@@ -1,3 +1,3 @@
 import { CreateReviewDto } from '../../reviews/dtos';
 
-export type IReviewData = CreateReviewDto;
+export class IReviewData extends CreateReviewDto {}

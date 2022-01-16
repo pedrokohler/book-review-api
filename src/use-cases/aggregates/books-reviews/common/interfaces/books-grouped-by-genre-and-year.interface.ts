@@ -1,4 +1,4 @@
-import { IBook } from '.';
+import { IBook } from './book.interface';
 
 export interface IBooksGroupedByGenreAndYear {
   [genre: string]: {

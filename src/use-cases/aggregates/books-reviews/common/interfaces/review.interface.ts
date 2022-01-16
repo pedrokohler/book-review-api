@@ -1,5 +1,5 @@
 import { IReviewData } from './review-data.interface';
 
-export interface IReview extends IReviewData {
+export class IReview extends IReviewData {
   id: string;
 }
