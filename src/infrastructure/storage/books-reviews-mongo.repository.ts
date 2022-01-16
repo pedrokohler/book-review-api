@@ -10,6 +10,8 @@ import {
 } from 'src/use-cases/aggregates/books-reviews/common/interfaces';
 import { IReview } from 'src/use-cases/aggregates/books-reviews/common/interfaces/review.interface';
 import { CreateReviewDto } from 'src/use-cases/aggregates/books-reviews/reviews/dtos';
+import { IAggregationResultForGenreAndYear } from './interfaces/aggregation-result-genre-year.inteface copy';
+import { IAggregationResultForSingleField } from './interfaces/aggregation-result-single-field.inteface';
 import { Book, BookDocument, Review, ReviewDocument } from './schemas';
 
 @Injectable()
@@ -142,7 +144,10 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   }
 
   private reduceBooksGroupedByField(fieldName: string) {
-    return (groupedBooks, aggregationResult) => {
+    return (
+      groupedBooks: IBooksGroupedByField,
+      aggregationResult: IAggregationResultForSingleField,
+    ) => {
       const fieldValue = aggregationResult[fieldName];
       const { documents } = aggregationResult;
       const previousBooksOfSameField = groupedBooks[fieldValue] ?? [];
@@ -155,8 +160,8 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   }
 
   private reduceBooksGroupedByAuthorAndReleaseDate(
-    groupedBooks,
-    aggregationResult,
+    groupedBooks: IBooksGroupedByGenreAndYear,
+    aggregationResult: IAggregationResultForGenreAndYear,
   ) {
     const { genre, year, documents } = aggregationResult;
     const previousBooksOfSameGenre = groupedBooks[genre] ?? {};
