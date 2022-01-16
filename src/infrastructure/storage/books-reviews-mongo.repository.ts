@@ -10,7 +10,7 @@ import {
 } from 'src/use-cases/aggregates/books-reviews/common/interfaces';
 import { IReview } from 'src/use-cases/aggregates/books-reviews/common/interfaces/review.interface';
 import { CreateReviewDto } from 'src/use-cases/aggregates/books-reviews/reviews/dtos';
-import { IAggregationResultForGenreAndYear } from './interfaces/aggregation-result-genre-year.inteface copy';
+import { IAggregationResultForGenreAndYear } from './interfaces/aggregation-result-genre-year.inteface';
 import { IAggregationResultForSingleField } from './interfaces/aggregation-result-single-field.inteface';
 import { Book, BookDocument, Review, ReviewDocument } from './schemas';
 
