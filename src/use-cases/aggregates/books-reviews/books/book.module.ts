@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { BooksReviewsRepository } from 'src/infrastructure/books-reviews-persistence.module';
+import { BooksReviewsStorageModule } from 'src/infrastructure/storage';
 import { BookController } from './book.controller';
 import { BookService } from './book.service';
 
 @Module({
-  imports: [BooksReviewsRepository],
+  imports: [BooksReviewsStorageModule],
   controllers: [BookController],
   providers: [BookService],
 })

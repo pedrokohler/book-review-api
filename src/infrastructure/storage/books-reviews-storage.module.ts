@@ -17,4 +17,4 @@ import { Book, BookSchema, Review, ReviewSchema } from './schemas';
   ],
   exports: [IBooksReviewsRepository],
 })
-export class BooksReviewsRepository {}
+export class BooksReviewsStorageModule {}
