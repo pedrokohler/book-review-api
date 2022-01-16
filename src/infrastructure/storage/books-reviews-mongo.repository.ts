@@ -26,7 +26,7 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   }
 
   public async findBook(id: string): Promise<IBook> {
-    const book = await this.bookModel.findById(id).populate('reviews').exec();
+    const book = await this.bookModel.findById(id).exec();
     return book as unknown as IBook;
   }
 
@@ -41,14 +41,6 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   public async getAllBooksGroupedByGenreAndReleaseDate(): Promise<IBooksGroupedByGenreAndYear> {
     const books = await this.bookModel
       .aggregate([
-        {
-          $lookup: {
-            from: 'reviews',
-            localField: 'reviews',
-            foreignField: '_id',
-            as: 'reviews',
-          },
-        },
         {
           $group: {
             _id: {
@@ -89,11 +81,13 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
     if (!book) {
       return null;
     }
+
     const review = new this.reviewModel(data);
     const doc = book as unknown as BookDocument;
     doc.reviews.push(review);
-    await Promise.all([review.save(), doc.save()]);
-    return review as unknown as IReview;
+    await doc.save();
+
+    return review.toJSON() as unknown as IReview;
   }
 
   public async deleteReview({
@@ -115,13 +109,10 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
       return false;
     }
 
-    const review = await this.reviewModel.deleteOne({ _id: reviewId }).exec();
-    if (!review) {
-      return false;
-    }
-
+    const reviews = book.reviews.filter((review) => review.id !== reviewId);
     const doc = book as unknown as BookDocument;
-    doc.reviews = book.reviews.filter((review) => review.id !== reviewId);
+    doc.reviews = reviews;
+
     await doc.save();
     return true;
   }
@@ -131,14 +122,6 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   ): Promise<IBooksGroupedByField> {
     const books = await this.bookModel
       .aggregate([
-        {
-          $lookup: {
-            from: 'reviews',
-            localField: 'reviews',
-            foreignField: '_id',
-            as: 'reviews',
-          },
-        },
         {
           $group: {
             _id: `$${fieldName}`,

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import { Review } from './review.schema';
+import { Review, ReviewSchema } from './review.schema';
 
 export type BookDocument = Book & mongoose.Document;
 
@@ -39,7 +39,7 @@ export class Book {
   genre: string;
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: [ReviewSchema],
     ref: 'Review',
     required: true,
   })
