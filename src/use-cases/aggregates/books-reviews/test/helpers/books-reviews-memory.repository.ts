@@ -7,9 +7,9 @@ import {
   IBooksGroupedByField,
   IBooksGroupedByGenreAndYear,
   IBooksReviewsRepository,
+  IReviewData,
+  IReview,
 } from '../../common/interfaces';
-import { IReviewData } from '../../common/interfaces/review-data.interface';
-import { IReview } from '../../common/interfaces/review.interface';
 
 @Injectable()
 export class BooksReviewsMemoryRepository implements IBooksReviewsRepository {

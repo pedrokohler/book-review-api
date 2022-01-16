@@ -3,9 +3,9 @@ import {
   IBookData,
   IBooksGroupedByField,
   IBooksGroupedByGenreAndYear,
+  IReview,
+  IReviewData,
 } from '.';
-import { IReviewData } from './review-data.interface';
-import { IReview } from './review.interface';
 
 export abstract class IBooksReviewsRepository {
   public abstract createBook(data: IBookData): Promise<IBook>;

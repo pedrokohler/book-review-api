@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+
 import {
   IBook,
   IBookData,
@@ -10,8 +11,10 @@ import {
 } from 'src/use-cases/aggregates/books-reviews/common/interfaces';
 import { IReview } from 'src/use-cases/aggregates/books-reviews/common/interfaces/review.interface';
 import { CreateReviewDto } from 'src/use-cases/aggregates/books-reviews/reviews/dtos';
-import { IAggregationResultForGenreAndYear } from './interfaces/aggregation-result-genre-year.inteface';
-import { IAggregationResultForSingleField } from './interfaces/aggregation-result-single-field.inteface';
+import {
+  IAggregationResultForGenreAndYear,
+  IAggregationResultForSingleField,
+} from './interfaces';
 import { Book, BookDocument, Review, ReviewDocument } from './schemas';
 
 @Injectable()

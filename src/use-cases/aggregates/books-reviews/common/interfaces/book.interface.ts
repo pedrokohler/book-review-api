@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { IBookData } from './book-data.interface';
 import { IReview } from './review.interface';
 

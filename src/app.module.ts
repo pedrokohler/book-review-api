@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+
 import { Configuration } from './common/config.service';
 import { BookModule, ReviewModule } from './use-cases/aggregates/books-reviews';
 

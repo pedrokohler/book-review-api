@@ -1,10 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+
 import {
   IBook,
   IBookRatingsByAuthor,
   IBooksReviewsRepository,
+  IReview,
 } from '../common/interfaces';
-import { IReview } from '../common/interfaces/review.interface';
 import { CreateReviewDto, DeletedReviewResponseDto } from './dtos';
 
 @Injectable()

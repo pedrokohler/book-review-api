@@ -1,4 +1,4 @@
-import { IReviewData } from '../../common/interfaces/review-data.interface';
+import { IReviewData } from '../../common/interfaces';
 
 export function createReviewData(data?: Partial<IReviewData>): IReviewData {
   return {

@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+
 import {
   ExampleAuthorRatings,
   IBookRatingsByAuthor,
+  IReview,
 } from '../common/interfaces';
-import { IReview } from '../common/interfaces/review.interface';
 import { CreateReviewDto, DeletedReviewResponseDto } from './dtos';
 import { ReviewService } from './review.service';
 

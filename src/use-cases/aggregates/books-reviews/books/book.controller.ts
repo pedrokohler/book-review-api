@@ -8,19 +8,19 @@ import {
   Query,
 } from '@nestjs/common';
 import {
-  ExampleBooksGroupedByGenreOrGenreAndYear,
-  IBook,
-} from '../common/interfaces';
-import { BookService } from './book.service';
-import { GroupByOption } from './enums/group-by-option.enum';
-import { CreateBookDto } from './dtos';
-import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
 
+import {
+  ExampleBooksGroupedByGenreOrGenreAndYear,
+  IBook,
+} from '../common/interfaces';
+import { BookService } from './book.service';
+import { GroupByOption } from './enums';
+import { CreateBookDto } from './dtos';
 @ApiTags('Books')
 @Controller('books')
 export class BookController {

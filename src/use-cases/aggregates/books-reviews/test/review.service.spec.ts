@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'crypto';
 
-import { ReviewService } from '../reviews/review.service';
+import { ReviewService } from '../reviews';
 import { IBooksReviewsRepository } from '../common/interfaces';
 import {
   createBookDto,

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { IBook } from './book.interface';
 
 export class ExampleAuthorRatings {

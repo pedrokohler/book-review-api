@@ -1,9 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { BookService } from '../books/book.service';
+import { BookService } from '../books';
 import { IBooksReviewsRepository } from '../common/interfaces';
-import { createBookDto } from './helpers';
-import { BooksReviewsMemoryRepository } from './helpers';
+import { createBookDto, BooksReviewsMemoryRepository } from './helpers';
 
 describe('BookService', () => {
   let service: BookService;
