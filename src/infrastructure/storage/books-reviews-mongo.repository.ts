@@ -191,11 +191,9 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
               input: '$reviews',
               as: 'review',
               in: {
-                $setField: {
-                  field: 'id',
-                  input: '$$review',
-                  value: '$$review._id',
-                },
+                id: '$$review._id',
+                rating: '$$review.rating',
+                review: '$$review.review',
               },
             },
           },
@@ -205,7 +203,6 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
         $project: {
           _id: 0,
           __v: 0,
-          'reviews._id': 0,
         },
       },
     ];
