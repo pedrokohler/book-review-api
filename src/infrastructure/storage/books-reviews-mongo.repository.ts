@@ -46,6 +46,7 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   public async getAllBooksGroupedByGenreAndReleaseDate(): Promise<IBooksGroupedByGenreAndYear> {
     const books = await this.bookModel
       .aggregate([
+        ...this.treatFieldsAggregationStages(),
         {
           $group: {
             _id: {
@@ -127,6 +128,7 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
   ): Promise<IBooksGroupedByField> {
     const books = await this.bookModel
       .aggregate([
+        ...this.treatFieldsAggregationStages(),
         {
           $group: {
             _id: `$${fieldName}`,
@@ -177,5 +179,35 @@ export class BooksReviewsMongoRepository implements IBooksReviewsRepository {
         [year]: [...previousBooksOfSameGenreAndYear, ...documents],
       },
     };
+  }
+
+  private treatFieldsAggregationStages() {
+    return [
+      {
+        $addFields: {
+          id: '$_id',
+          reviews: {
+            $map: {
+              input: '$reviews',
+              as: 'review',
+              in: {
+                $setField: {
+                  field: 'id',
+                  input: '$$review',
+                  value: '$$review._id',
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          __v: 0,
+          'reviews._id': 0,
+        },
+      },
+    ];
   }
 }
