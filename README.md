@@ -1,38 +1,55 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Introduction
+This is app was created as a take-home challenge for the ramani.io selection process. The instructions used to build it can be found in the [Challenge section](#challenge)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Apart from the requirements, tests were included in order to make sure that all the business rules of the application are being followed, as well as that no refactoring could create any issues regarding them.
 
-## Description
+Also the BooksReviewsRepository module was created using the Dependency Inversion Principle, meaning that instead of relying on the repository's implementation, the business rules module, i.e. books-reviews aggregate, relies only on an interface. The real implementation of the mongodb repository is made inside the infrastructure folder and it implements the interface required by the books-reviews aggregate.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+For the tests, instead of using the real mongodb implementation, we mock it with another implementation that is an in-memory repository.
 
+The whole documentation of the API can be found in the [swagger page](https://ramani-books-reviews-api.herokuapp.com/api/) of its [live version](https://ramani-books-reviews-api.herokuapp.com/).
+
+You can also use any API platform such as Postman or Insomnia in order to use the API, which is currently open for anyone.
+
+The live version uses the free tier of MongoDB Atlas and is hosted in Heroku.
+
+An automatic CI-CG pipeline was created using Github Actions and any push into Github's master branch will trigger a new deployment to Heroku automatically. Heroku will use the Dockerfile present in the root of the application in order to know how to build and run it.
+
+## Possible improvements on the current version
+Some nice improvements on the existing code:
+ * Make integration tests with an in-memory database, such as Mongo Memory Server, that uses the actual mongodb implementation
+ * Make end-to-end tests to test not only the services and repository, but also the app controllers
+ * Usage of query cursors, so that not all documents are brought by the GET method calls
+ * Implement API authentication
+ * Create endpoints to update and delete books
+ * Create endpoints to filter books based on genre, author or year
+ * Include possibility of ordering results by rating
+
+# General Instructions
 ## Installation
 
 ```bash
 $ npm install
 ```
-
 ## Running the app
+
+
+Run the app with docker-compose by running the following command at the root folder of your app:
+
+```bash
+docker-compose up
+```
+
+You can also run it manually without docker-compose, but, before running the app, make sure you have the following environment variables set (e.g.: using a .env file at the root of the application) with the corresponding values for your application:
+
+
+```bash
+MONGO_CONNECTION_STRING=
+MONGO_DATABASE_NAME=
+```
+
+Use these commands to run it manually:
 
 ```bash
 # development
@@ -44,7 +61,6 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
-
 ## Test
 
 ```bash
@@ -58,16 +74,4 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+# Challenge
