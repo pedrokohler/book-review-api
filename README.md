@@ -75,3 +75,64 @@ $ npm run test:cov
 ```
 
 # Challenge
+## Task
+
+**Build a book directory.**
+
+Create a REST API that allows a user to manage a book directory.
+
+The user should be able to do things like add and remove books, as well as
+
+get statistics about a certain book or group of books.
+
+**We will need 6 basic APIs:**
+
+1) GET books grouped by genre
+2) GET books grouped by genre and release date eg
+
+     Comedy
+
+           2021
+
+                Book 1
+
+                Book2
+
+           2020
+
+                Book3
+
+                Book4
+
+     Thriller
+
+           2021
+
+                Book 5
+
+                Book6
+
+           2019
+
+                Book7
+
+3) GET sum of review ratings grouped by author
+4) POST add a new book to the directory
+5) POST add a review
+6) DELETE delete a review
+
+### Technical Details
+
+- **Must use technologies:** Nest.js, Express.js, MongoDb, [Mongoose](https://mongoosejs.com/docs/)
+- collection name: books
+- **Document Schema for Books**
+    - _id:ObjectId()
+    - bookName:String
+    - author:String
+    - releaseDate:Date
+    - genre:String
+    - reviews:Array[]// Array of Review Schema
+- **Document Schema for Review**
+    - _id:ObjectId()
+    - review:String
+    - rating:Number
