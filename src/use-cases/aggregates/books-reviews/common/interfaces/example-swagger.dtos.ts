@@ -22,7 +22,7 @@ export class ExampleBooksGroupedByGenre {
   comedy: IBook[];
 }
 
-export class ExampleBooksGropedByYear {
+export class ExampleBooksGroupedByYear {
   @ApiProperty({
     type: [IBook],
   })
@@ -36,14 +36,12 @@ export class ExampleBooksGropedByYear {
 
 export class ExampleBooksGroupedByGenreOrGenreAndYear {
   @ApiProperty({
-    type: ExampleBooksGropedByYear,
-    description: 'Example of books grouped by genre and year',
+    type: ExampleBooksGroupedByYear,
   })
-  comedy: ExampleBooksGropedByYear;
+  comedy: ExampleBooksGroupedByYear;
 
   @ApiProperty({
-    type: [IBook],
-    description: 'Example of books grouped by genre only',
+    type: ExampleBooksGroupedByYear,
   })
-  action: ExampleBooksGroupedByGenre;
+  action: ExampleBooksGroupedByYear;
 }

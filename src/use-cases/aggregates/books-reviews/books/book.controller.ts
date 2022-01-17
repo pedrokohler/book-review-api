@@ -9,12 +9,15 @@ import {
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
+  ApiExtraModels,
   ApiOkResponse,
   ApiQuery,
   ApiTags,
+  refs,
 } from '@nestjs/swagger';
 
 import {
+  ExampleBooksGroupedByGenre,
   ExampleBooksGroupedByGenreOrGenreAndYear,
   IBook,
 } from '../common/interfaces';
@@ -32,8 +35,17 @@ export class BookController {
     return await this.bookService.createBook(data);
   }
 
+  @ApiExtraModels(
+    ExampleBooksGroupedByGenreOrGenreAndYear,
+    ExampleBooksGroupedByGenre,
+  )
   @ApiOkResponse({
-    type: ExampleBooksGroupedByGenreOrGenreAndYear,
+    schema: {
+      oneOf: refs(
+        ExampleBooksGroupedByGenreOrGenreAndYear,
+        ExampleBooksGroupedByGenre,
+      ),
+    },
   })
   @ApiQuery({ name: 'group-by', enum: GroupByOption })
   @Get()
