@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { BookService } from '../books';
+import { GroupByOption } from '../books/enums';
 import { IBooksReviewsRepository } from '../common/interfaces';
 import { createBookDto, BooksReviewsMemoryRepository } from './helpers';
 
@@ -62,7 +63,9 @@ describe('BookService', () => {
     await service.createBook({ ...bookDto, genre: 'Thriller' });
     await service.createBook({ ...bookDto, genre: 'Comedy' });
 
-    const booksGroupeByGenre = await service.getAllBooksGroupedByGenre();
+    const booksGroupeByGenre = await service.getAllBooksGrouped(
+      GroupByOption.GENRE,
+    );
 
     expect(booksGroupeByGenre).toHaveProperty('Comedy');
     expect(booksGroupeByGenre).toHaveProperty('Thriller');
@@ -114,8 +117,9 @@ describe('BookService', () => {
       releaseDate: '2019-05-25T00:00:00',
     });
 
-    const booksGroupeByGenreAndYear =
-      await service.getAllBooksGroupedByGenreAndYear();
+    const booksGroupeByGenreAndYear = await service.getAllBooksGrouped(
+      GroupByOption.GENRE_AND_RELEASE_DATE,
+    );
 
     expect(booksGroupeByGenreAndYear).toHaveProperty('Comedy');
     expect(booksGroupeByGenreAndYear).toHaveProperty('Thriller');

@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import {
   ApiCreatedResponse,
   ApiExtraModels,
@@ -50,16 +42,6 @@ export class BookController {
   @ApiQuery({ name: 'group-by', enum: GroupByOption })
   @Get()
   async getAllBooksGrouped(@Query('group-by') groupBy: GroupByOption) {
-    switch (groupBy) {
-      case GroupByOption.GENRE:
-        return await this.bookService.getAllBooksGroupedByGenre();
-      case GroupByOption.GENRE_AND_RELEASE_DATE:
-        return await this.bookService.getAllBooksGroupedByGenreAndYear();
-      default:
-        throw new HttpException(
-          'Invalid group-by value',
-          HttpStatus.BAD_REQUEST,
-        );
-    }
+    return this.bookService.getAllBooksGrouped(groupBy);
   }
 }
